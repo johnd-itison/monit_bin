@@ -23,10 +23,13 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+include_recipe 'chef-sugar::default'
+
 service "monit" do
   case node["platform"]
   when "ubuntu"
-    provider Chef::Provider::Service::Upstart
+    provider Chef::Provider::Service::Upstart if upstart?
+    provider Chef::Provider::Service::Systemd if systemd?
   when "smartos"
     provider Chef::Provider::Service::Simple
     pattern "/opt/local/sbin/monit"

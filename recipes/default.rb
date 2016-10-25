@@ -23,10 +23,17 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+include_recipe 'chef-sugar::default'
 
 if ["ubuntu", "smartos"].include? node["platform"] then
-  cookbook_file "/etc/init/monit.conf" do
-    source "monit_upstart"
+  if systemd?
+    cookbook_file "/lib/systemd/system/monit.service" do
+      source "monit_systemd"
+    end
+  else
+    cookbook_file "/etc/init/monit.conf" do
+      source "monit_upstart"
+    end
   end
 else
   cookbook_file "/etc/init.d/monit" do
