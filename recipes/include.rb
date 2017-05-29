@@ -30,6 +30,7 @@ service "monit" do
   when "ubuntu"
     provider Chef::Provider::Service::Upstart if upstart?
     provider Chef::Provider::Service::Systemd if systemd?
+    action :enable
   when "smartos"
     provider Chef::Provider::Service::Simple
     pattern "/opt/local/sbin/monit"
